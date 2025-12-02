@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: true,
+        lowercase: true,
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
     password: {
@@ -22,14 +23,15 @@ const userSchema = mongoose.Schema({
     }
 }, { timestamps: true});
 
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
-        return next();
-    }
+// userSchema.pre('save', async function(next) {
+//     if (!this.isModified('password')) {
+//         return next();
+//     }
 
-    this.password = await bcrypt.hash(this.password, process.env.BCRYPT_SALT_ROUNDS || 10);
-    next();
-});
+//     const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
+//     this.password = await bcrypt.hash(this.password, saltRounds);
+//     next();
+// });
 
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {

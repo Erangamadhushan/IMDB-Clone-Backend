@@ -15,10 +15,10 @@ router.get('/', (req, res) => {
     res.json({
         message: 'User Service is running',
         routes: {
-            register: '/auth/users/register',
-            login: '/auth/users/login',
-            profile: '/auth/users/profile',
-            verify: '/auth/users/verify'
+            register: '/auth/user/register',
+            login: '/auth/user/login',
+            profile: '/auth/user/profile',
+            verify: '/auth/user/verify'
         }
     });
 });

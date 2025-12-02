@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const config = require('./config/env.config');
+const userRoutes = require('./routes/user.routes');
+const connectDB = require('./config/db.config');
 
 
 const app = express();
@@ -12,13 +14,26 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-app.use('/api/auth/user/', userRoutes);
+// Database Connection
+connectDB();
+
+app.use('/api/auth/user', userRoutes);
 
 app.get('/', (req, res) => {
     res.status(200).json({
         message: "Basic route work properly",
         success: true
     })
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+app.use((req, res, next) => {
+    res.status(404).json({
+        message: 'Route not found'
+    });
 });
 
 app.listen(PORT, () => {
