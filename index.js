@@ -19,6 +19,7 @@ connectDB();
 
 app.use('/api/auth/user', userRoutes);
 
+
 app.get('/', (req, res) => {
     res.status(200).json({
         message: "Basic route work properly",

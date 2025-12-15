@@ -1,14 +1,18 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const userController = require('../controller/user.controller')
+const movieRoutes = require('./movies.routes');
+const userController = require('../controller/user.controller');
 
 
 const router = express.Router();
+router.use('/favorites', movieRoutes);
+
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.get('/profile', userController.getProfile);
+
 
 // By Default export the router
 router.get('/', (req, res) => {
@@ -22,5 +26,7 @@ router.get('/', (req, res) => {
         }
     });
 });
+
+
 
 module.exports = router;
