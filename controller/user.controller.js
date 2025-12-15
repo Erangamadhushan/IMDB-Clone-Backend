@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // Generate json web token
 const generateToken = (userId) => {
-    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    return jwt.sign({ id:userId }, process.env.JWT_SECRET, { expiresIn: '2h' });
 }
 
 exports.register = async  (req, res) => {
@@ -106,23 +106,4 @@ exports.getProfile = async (req, res) => {
     }
 }
 
-// Verify token (for other services)
-exports.verifyToken = async (req, res) => {
-    try {
-        const token = req.headers.authorization?.split(' ')[1];
 
-        if (!token) {
-            return res.status(401).json({ valid: false, message: 'No token provided' });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId).select('-password');
-
-        if (!user) {
-            return res.status(404).json({ valid: false, message: 'User not found' });
-        }
-        res.status(200).json({ valid: true, user });
-    } catch (error) {
-        res.status(401).json({ valid: false, message: 'Invalid token' });
-    }
-}
