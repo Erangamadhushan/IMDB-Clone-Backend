@@ -9,16 +9,17 @@ require('dotenv').config();
 exports.addFavoriteMovie = async (req, res) => {
   try {
     const userId = req.user.id; // from JWT middleware
-    const { movieId } = req.body;
+    const { movie } = req.body;
+    const { backdrop_path, id, original_language, video, vote_count, ...storeMovie } = movie;
 
-    if (!movieId) {
+    if (!id) {
       return res.status(400).json({ message: "Movie ID required" });
     }
 
     const user = await User.findByIdAndUpdate(
       userId,
       {
-        $addToSet: { favoriteMovies: movieId }, // prevents duplicates
+        $addToSet: { favoriteMovies: storeMovie },
       },
       { new: true }
     );

@@ -2,6 +2,35 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
+// create favorite movies sub-schema
+const favoriteMovieSchema = mongoose.Schema({
+    movieId: {
+        type: String,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    poster_path: {
+        type: String
+    },
+    overview: {
+        type: String
+    },
+    adult: {
+        type: Boolean,
+        default: false
+    },
+    vote_average: {
+        type: Number
+    },
+    release_date: {
+        type: String
+    }
+}, { _id : false });
+
+
 const userSchema = mongoose.Schema({
     username: {
         type: String,
@@ -22,22 +51,10 @@ const userSchema = mongoose.Schema({
         minlength:[6, 'Password must be at least 6 characters long']
     },
     favoriteMovies: [
-        {
-            type: String,
-            
-        }
+        favoriteMovieSchema
     ]
 }, { timestamps: true});
 
-// userSchema.pre('save', async function(next) {
-//     if (!this.isModified('password')) {
-//         return next();
-//     }
-
-//     const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
-//     this.password = await bcrypt.hash(this.password, saltRounds);
-//     next();
-// });
 
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {
