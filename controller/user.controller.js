@@ -83,7 +83,7 @@ exports.getProfile = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Find user by ID
-    const user = await User.findById(decoded.userId).select('-password');
+    const user = await User.findById(decoded.id).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -92,6 +92,8 @@ exports.getProfile = async (req, res) => {
     
     // Return user info without password
     const { password, ...userWithoutPassword } = user;
+
+    // console.log("User without password:", userWithoutPassword);
     res.json({ message: 'User profile retrieved', user: userWithoutPassword });
     } catch (error) {
         console.error('Profile error:', error);
