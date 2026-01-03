@@ -9,7 +9,11 @@ const app = express();
 const PORT = config.PORT;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "https://imdb-clone.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.urlencoded({
     extended: true
 }));
