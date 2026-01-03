@@ -10,7 +10,7 @@ const PORT = config.PORT;
 
 app.use(express.json());
 app.use(cors({
-    origin: "https://imdb-clone.vercel.app",
+    origin: "https://imdb-clone-sigma-beige.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
