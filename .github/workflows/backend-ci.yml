@@ -28,3 +28,8 @@ jobs:
 
       - name: Basic server syntax check
         run: node -c index.js
+
+      - name: Run tests
+        env:
+          MONGO_MEMORY_SERVER_OPTIONS: '{"instance": {"dbName": "testdb"}}'
+        run: npm test

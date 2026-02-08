@@ -1,33 +1,36 @@
 const mongoose = require('mongoose');
-const config = require('./env.config');
+require('dotenv').config();
 
 const connectDB = async () => {
     try {
-        const connection = await mongoose.connect(config.MONGODB_URI);
-        console.log('MongoDB connected successfully');
-
-        connection.connection.on('error', (err) => {
-            console.error(`MongoDB connection error: ${err}`);
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000, 
         });
 
-        connection.connection.on('disconnected', () => {
-            console.warn('MongoDB disconnected');
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        // Handle connection events
+
+        mongoose.connection.on('connected', () => {
+            console.log('Mongoose connected to DB Cluster');
         });
 
-        connection.connection.on('connected', () => {
-            console.log('MongoDB reconnected');
+        mongoose.connection.on('error', (err) => {
+            console.error(`Mongoose connection error: ${err}`);
+        });
+        mongoose.connection.on('disconnected', () => {
+            console.log('Mongoose disconnected');
         });
 
+        // Graceful shutdown
         process.on('SIGINT', async () => {
-            await connection.connection.close();
-            console.log('MongoDB connection closed due to app termination');
+            await mongoose.connection.close();
+            console.log('Mongoose disconnected on app termination');
             process.exit(0);
         });
-
     } catch (error) {
-        console.error('MongoDB connection error:', error);
-        process.exit(1);
+        console.error(`Error connecting to MongoDB: ${error}`);
+        throw error; // Rethrow to allow handling in calling code
     }
-};
+}
 
 module.exports = connectDB;
